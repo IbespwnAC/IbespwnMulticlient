@@ -1,20 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!--Project was exported from assembly: C:\games\ACMulticlient\ACMulticlient.exe-->
+<?xml version='1.0' encoding='utf-8'?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>cfa0b7b4-3a38-42c9-bacc-1f1848e0c233</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B9CBC57A-5979-4BEB-BF40-8D6F7B0DE6E3}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
     <AssemblyName>ACMulticlient</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
-    <FileAlignment>512</FileAlignment>
-    <RootNamespace>ACMulticlient</RootNamespace>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,8 +20,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System.Windows.Forms" />
@@ -40,33 +38,28 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="frmMain.cs" />
-    <Compile Include="dlgIgnoreActivate.cs" />
-    <Compile Include="frmProgress.cs" />
-    <Compile Include="frmSetup.cs" />
-    <Compile Include="PortRepeater.cs" />
-    <Compile Include="SecureTextbox.cs" />
-    <Compile Include="AcInstance.cs" />
-    <Compile Include="UserEntry.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="udpConnections.cs" />
-    <Compile Include="My\MyApplication.cs" />
-    <Compile Include="My\MyComputer.cs" />
-    <Compile Include="My\MyProject.cs" />
-    <Compile Include="My\MySettings.cs" />
-    <Compile Include="My\MySettingsProperty.cs" />
-    <Compile Include="My\Resources\Resources.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="ACMulticlient\My\MyApplication.cs" />
+    <Compile Include="ACMulticlient\My\MyComputer.cs" />
+    <Compile Include="ACMulticlient\My\MyProject.cs" />
+    <Compile Include="ACMulticlient\dlgIgnoreActivate.cs" />
+    <Compile Include="ACMulticlient\frmMain.cs" />
+    <Compile Include="ACMulticlient\frmProgress.cs" />
+    <Compile Include="ACMulticlient\frmSetup.cs" />
+    <Compile Include="ACMulticlient\My\Resources\Resources.cs" />
+    <Compile Include="ACMulticlient\My\MySettings.cs" />
+    <Compile Include="ACMulticlient\PortRepeater.cs" />
+    <Compile Include="ACMulticlient\SecureTextbox.cs" />
+    <Compile Include="ACMulticlient\AcInstance.cs" />
+    <Compile Include="ACMulticlient\UserEntry.cs" />
+    <Compile Include="ACMulticlient\Settings.cs" />
+    <Compile Include="ACMulticlient\udpConnections.cs" />
+    <EmbeddedResource Include="ACMulticlient.Resources.resources" />
+    <EmbeddedResource Include="ACMulticlient.frmProgress.resources" />
+    <EmbeddedResource Include="ACMulticlient.frmSetup.resources" />
+    <EmbeddedResource Include="ACMulticlient.PortRepeater.resources" />
+    <EmbeddedResource Include="ACMulticlient.frmMain.resources" />
+    <EmbeddedResource Include="ACMulticlient.dlgIgnoreActivate.resources" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="dlgIgnoreActivate.resx" />
-    <EmbeddedResource Include="frmMain.resx" />
-    <EmbeddedResource Include="frmProgress.resx" />
-    <EmbeddedResource Include="frmSetup.resx" />
-    <EmbeddedResource Include="PortRepeater.resx" />
-    <EmbeddedResource Include="Resources.resx" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
