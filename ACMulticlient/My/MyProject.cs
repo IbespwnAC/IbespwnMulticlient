@@ -13,6 +13,7 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+  using System.Windows.Forms;
 
     [HideModuleName, StandardModule, GeneratedCode("MyTemplate", "8.0.0.0")]
     internal sealed class MyProject
@@ -107,9 +108,8 @@
                 {
                     local = Activator.CreateInstance<T>();
                 }
-                catch when (?)
+                catch (TargetInvocationException exception)
                 {
-                    TargetInvocationException exception;
                     throw new InvalidOperationException(Utils.GetResourceString("WinForms_SeeInnerException", new string[] { exception.InnerException.Message }), exception.InnerException);
                 }
                 finally

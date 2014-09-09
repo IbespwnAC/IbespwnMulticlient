@@ -23,10 +23,10 @@
 
         public void Addmore()
         {
-            IEnumerator enumerator;
+          IEnumerator enumerator = null;
+          enumerator = this.Controls.GetEnumerator();
             try
             {
-                enumerator = this.Controls.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     Control current = (Control) enumerator.Current;
@@ -83,7 +83,7 @@
 
         public List<int> Getports()
         {
-            IEnumerator enumerator;
+            IEnumerator enumerator = null;
             List<int> list2 = new List<int>();
             try
             {
@@ -144,9 +144,9 @@
                 }
             }
             list.Sort();
+            enumerator = list.GetEnumerator();
             try
             {
-                enumerator = list.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     int current = enumerator.Current;

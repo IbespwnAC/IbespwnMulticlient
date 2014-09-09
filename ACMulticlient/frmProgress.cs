@@ -48,7 +48,9 @@
             foreach (FileInfo info in folder.GetFiles())
             {
                 string path = destinationFolder + @"\" + info.Name;
+                string full_path = info.FullName;
                 bool flag2 = true;
+
                 if (File.Exists(path))
                 {
                     FileInfo info2 = new FileInfo(path);
@@ -57,7 +59,7 @@
                         flag2 = false;
                     }
                 }
-                if (flag2 && (CopyFileEx(ref info.FullName, ref path, this._copyProgressRoutine, 0, 0, 0) == 0))
+                if (flag2 && (CopyFileEx(ref full_path, ref path, this._copyProgressRoutine, 0, 0, 0) == 0))
                 {
                     return 0;
                 }
@@ -65,7 +67,7 @@
             }
             foreach (DirectoryInfo info3 in folder.GetDirectories())
             {
-                IEnumerator enumerator;
+                IEnumerator enumerator = null;
                 bool flag = false;
                 try
                 {
@@ -100,7 +102,7 @@
 
         private int CopyProgress(long totalFileSize, long totalBytesTransferred, long streamSize, long streamBytesTransferred, int dwStreamNumber, int dwCallbackReason, int hSourceFile, int hDestinationFile, int lpData)
         {
-            int num;
+            int num = 0;
             int num2 = Convert.ToInt32((double) ((((double) (this._totalBytesCopied + totalBytesTransferred)) / ((double) this._totalFileSize)) * 100.0));
             if (num2 < this.ProgressBar1.Maximum)
             {
@@ -143,7 +145,7 @@
             }
             foreach (DirectoryInfo info2 in folder.GetDirectories())
             {
-                IEnumerator enumerator;
+                IEnumerator enumerator = null;
                 bool flag = false;
                 try
                 {

@@ -88,7 +88,7 @@
 
         public bool isEqual(byte[] comparehash)
         {
-            bool flag;
+            bool flag = false;
             try
             {
                 byte[] buffer = this.getHash();

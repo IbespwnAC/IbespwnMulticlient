@@ -182,7 +182,7 @@
 
         private bool closelauncherDialog()
         {
-            bool flag;
+            bool flag = false;
             IntPtr hWnd = FindWindow(null, "Failure");
             if (!hWnd.Equals(IntPtr.Zero))
             {
@@ -370,7 +370,7 @@
                             }
                             else
                             {
-                                bool flag;
+                                bool flag = false;
                                 if ((this.msettings.accounts == null) || (this.msettings.accounts.Count == 0))
                                 {
                                     this.msettings.accounts = new List<UserEntry>();
@@ -378,11 +378,11 @@
                                 }
                                 if (this.msettings.LaunchPaths != null)
                                 {
-                                    List<string>.Enumerator enumerator;
+                                  List<string>.Enumerator enumerator;
+                                  enumerator = this.msettings.LaunchPaths.GetEnumerator();
                                     try
                                     {
                                     Label_03D1:
-                                        enumerator = this.msettings.LaunchPaths.GetEnumerator();
                                         while (enumerator.MoveNext())
                                         {
                                             string current = enumerator.Current;
@@ -718,7 +718,7 @@
             string path = string.Empty;
             if (!string.IsNullOrEmpty(preferredpath))
             {
-                bool flag;
+                bool flag = false;
                 foreach (string str6 in list)
                 {
                     if (str6.ToLower() == preferredpath.ToLower())
@@ -794,7 +794,7 @@
             return path;
         }
 
-        public void launchac(string username, string di, string da, string world)
+        public int launchac(string username, string di, string da, string world)
         {
             if (username != string.Empty)
             {
@@ -849,7 +849,7 @@
                         item.secret = null;
                         this.txtAc.ClearText(false);
                         ProjectData.ClearProjectError();
-                        return;
+                        return 0;
                     }
                     catch (Exception exception4)
                     {
@@ -858,13 +858,13 @@
                         item.secret = null;
                         this.txtAc.ClearText(false);
                         ProjectData.ClearProjectError();
-                        return;
+                        return 0;
                     }
                     string path = this.initlaunch(null, item.name);
                     if (File.Exists(path))
                     {
-                        string str;
-                        bool flag;
+                        string str = "";
+                        bool flag = false;
                         item.usedACpath = Path.GetDirectoryName(path);
                         item.usedworld = world;
                         if (str3 != string.Empty)
@@ -886,6 +886,8 @@
                             }
                         }
                         while (!(process.HasExited | flag));
+
+                        return 1;
                     }
                     else if (!string.IsNullOrEmpty(path))
                     {
@@ -900,6 +902,8 @@
                     ProjectData.ClearProjectError();
                 }
             }
+
+            return 0;
         }
 
         private void lblDelete_Click(object sender, EventArgs e)
@@ -954,7 +958,7 @@
             }
             if (this.msetup.ShowDialog() == DialogResult.OK)
             {
-                IEnumerator enumerator;
+                IEnumerator enumerator = null;
                 IEnumerator enumerator3;
                 this.msettings.LaunchPaths.Clear();
                 try
@@ -976,9 +980,9 @@
                 this.lstworld.Items.Clear();
                 int index = 0;
                 this.msettings.selectedworlds = new string[0];
+                enumerator3 = this.msetup.lstWorlds.CheckedIndices.GetEnumerator();
                 try
                 {
-                    enumerator3 = this.msetup.lstWorlds.CheckedIndices.GetEnumerator();
                     while (enumerator3.MoveNext())
                     {
                         int num3 = Conversions.ToInteger(enumerator3.Current);
@@ -1067,8 +1071,8 @@
                 string path = this.initlaunch(acpath, useraccount.name);
                 if (File.Exists(path))
                 {
-                    string str3;
-                    bool flag;
+                    string str3 = "";
+                    bool flag = false;
                     useraccount.usedACpath = Path.GetDirectoryName(path);
                     if (str2 != string.Empty)
                     {
@@ -1266,7 +1270,8 @@
 
         private void WriteInteger(string Section, string Key, int Value, string filename)
         {
-            WritePrivateProfileString(ref Section, ref Key, ref Conversions.ToString(Value), ref filename);
+            string l_val = Conversions.ToString(Value);
+            WritePrivateProfileString(ref Section, ref Key, ref l_val, ref filename);
             FlushPrivateProfileString(0, 0, 0, ref filename);
         }
 

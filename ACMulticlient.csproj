@@ -1,14 +1,15 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <ProjectType>local</ProjectType>
     <ProjectVersion>7.10.377</ProjectVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>cfa0b7b4-3a38-42c9-bacc-1f1848e0c233</ProjectGuid>
+    <ProjectGuid>{7ADC680F-D0DB-490A-BF4F-843C345E238E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <AssemblyName>ACMulticlient</AssemblyName>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -38,19 +39,32 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
+    <Compile Include="ACMulticlient\My\MySettingsProperty.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ACMulticlient\My\MyApplication.cs" />
     <Compile Include="ACMulticlient\My\MyComputer.cs" />
     <Compile Include="ACMulticlient\My\MyProject.cs" />
-    <Compile Include="ACMulticlient\dlgIgnoreActivate.cs" />
-    <Compile Include="ACMulticlient\frmMain.cs" />
-    <Compile Include="ACMulticlient\frmProgress.cs" />
-    <Compile Include="ACMulticlient\frmSetup.cs" />
+    <Compile Include="ACMulticlient\dlgIgnoreActivate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ACMulticlient\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ACMulticlient\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ACMulticlient\frmSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ACMulticlient\My\Resources\Resources.cs" />
     <Compile Include="ACMulticlient\My\MySettings.cs" />
-    <Compile Include="ACMulticlient\PortRepeater.cs" />
-    <Compile Include="ACMulticlient\SecureTextbox.cs" />
+    <Compile Include="ACMulticlient\PortRepeater.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ACMulticlient\SecureTextbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ACMulticlient\AcInstance.cs" />
     <Compile Include="ACMulticlient\UserEntry.cs" />
     <Compile Include="ACMulticlient\Settings.cs" />

@@ -69,8 +69,8 @@
                     dialog.SelectedPath = this.txtACMainpath.Text;
                     if ((dialog.ShowDialog() == DialogResult.OK) && !string.Equals(this.txtACMainpath.Text, dialog.SelectedPath, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        bool flag;
-                        IEnumerator enumerator;
+                        bool flag = false;
+                        IEnumerator enumerator = null;
                         if (!File.Exists(Path.Combine(dialog.SelectedPath, "acclient.exe")))
                         {
                             DirectoryInfo info = new DirectoryInfo(dialog.SelectedPath);
@@ -130,7 +130,7 @@
 
         private void btnUpdatefolders_Click(object sender, EventArgs e)
         {
-            IEnumerator enumerator;
+            IEnumerator enumerator = null;
             frmProgress progress = new frmProgress {
                 srcFolder = this.txtACMainpath.Text,
                 lstpaths = this.lstPaths,
