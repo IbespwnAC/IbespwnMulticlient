@@ -27,6 +27,8 @@
     {
         [AccessedThroughProperty("btnLaunch")]
         private Button _btnLaunch;
+        [AccessedThroughProperty("btnLaunchAll")]
+        private Button _btnLaunchAll;
         [AccessedThroughProperty("cboUsername")]
         private ComboBox _cboUsername;
         [AccessedThroughProperty("chkStartDecal")]
@@ -48,7 +50,7 @@
         [AccessedThroughProperty("ToolTip1")]
         private ToolTip _ToolTip1;
         [AccessedThroughProperty("txtAc")]
-        private SecureTextbox _txtAc;
+        private TextBox _txtAc;
         private IContainer components;
         private string mACIniFilePath;
         private System.Windows.Forms.Timer mLoginTimer;
@@ -75,13 +77,16 @@
             this.mproxyclientpath = string.Empty;
             this.mUdpcon = new udpConnections();
             this.InitializeComponent();
+            _txtAc.UseSystemPasswordChar = true;
         }
 
         [DllImport("user32.dll", SetLastError=true)]
         private static extern bool BringWindowToTop(IntPtr hwnd);
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-            this.btnLaunch.Enabled = false;
+            this.btnLaunch.Enabled = false;  
+            this.btnLaunchAll.Enabled = false;
+
             try
             {
                 Process[] processesByName = Process.GetProcessesByName("aclauncher");
@@ -113,7 +118,45 @@
             finally
             {
                 this.btnLaunch.Enabled = true;
+                this.btnLaunchAll.Enabled = true;
             }
+        }
+
+        private void btnLaunchAll_Click(object sender, EventArgs e)
+        {
+          this.btnLaunch.Enabled = false;
+          this.btnLaunchAll.Enabled = false;
+
+          try
+          {
+            Process[] processesByName = Process.GetProcessesByName("aclauncher");
+            if ((processesByName != null) && (processesByName.Count<Process>() > 0))
+            {
+              Interaction.MsgBox("The aclauncer is active, close this window first.", MsgBoxStyle.Critical, null);
+            }
+            else
+            {
+              string world = Conversions.ToString(this.lstworld.SelectedItem);
+              if (this.lstworld.SelectedIndex == -1)
+              {
+                Interaction.MsgBox("Select a world to login.", MsgBoxStyle.Critical, null);
+              }
+              else
+              {
+                this.msettings.Defaultworld = world;
+
+                for (int i = 0; i < this.cboUsername.Items.Count; ++i)
+                {
+                  this.launchac(((UserEntry) this.cboUsername.Items[i]).name, "0", "0", world, true);
+                }
+              }
+            }
+          }
+          finally
+          {
+            this.btnLaunch.Enabled = true;
+            this.btnLaunchAll.Enabled = true;
+          }
         }
 
         private void btnMoreports_Click(object sender, EventArgs e)
@@ -121,6 +164,23 @@
             this.msetup.acPorts.Addmore();
         }
 
+        private void txtAc_KeyDown(object sender, KeyEventArgs e)
+        {
+          UserEntry entry = this.getUserentry(this.cboUsername.Text);
+
+          if (e.KeyCode == Keys.Enter)
+          {
+            if ((entry != null) && (entry.secret != null))
+            {
+              this.btnLaunch_Click(null, EventArgs.Empty);
+              return;
+            }
+          }
+
+          entry.secret = this.txtAc.Text;
+          save_credentials(ref entry);
+        }
+        
         private void cboUsername_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -132,7 +192,7 @@
                 }
                 else
                 {
-                    this.txtAc.ClearText(false);
+                    this.txtAc.Text = string.Empty;
                     this.txtAc.Focus();
                 }
             }
@@ -149,12 +209,15 @@
                 }
                 if ((entry != null) && (entry.secret != null))
                 {
-                    this.txtAc.ClearText(true);
-                    this.btnLaunch.Focus();
+                    this.txtAc.Text = entry.secret;
+                    // It's my opinion that with the addition of storing passwords, 
+                    //  this Focus change is a detriment to the user experience.
+                    //  Thus, I will remove it for now.
+                    //this.btnLaunch.Focus();
                 }
                 else
                 {
-                    this.txtAc.ClearText(false);
+                    this.txtAc.Text = "";
                     this.txtAc.Focus();
                 }
             }
@@ -566,13 +629,14 @@
             this.Label1 = new Label();
             this.cboUsername = new ComboBox();
             this.btnLaunch = new Button();
+            this.btnLaunchAll = new Button();
             this.chkStartDecal = new CheckBox();
             this.ToolTip1 = new ToolTip(this.components);
             this.lblDelete = new Label();
             this.lblSetup = new Label();
             this.ProgressBar1 = new ProgressBar();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
-            this.txtAc = new SecureTextbox();
+            this.txtAc = new TextBox();
             this.SuspendLayout();
             this.lstworld.FormattingEnabled = true;
             this.lstworld.Items.AddRange(new object[] { "Morningthaw", "Darktide" });
@@ -615,6 +679,15 @@
             this.btnLaunch.Text = "Login";
             this.ToolTip1.SetToolTip(this.btnLaunch, "Start AC and Save Current Changes");
             this.btnLaunch.UseVisualStyleBackColor = true;
+            point = new Point(0x58, 0x66);
+            this.btnLaunchAll.Location = point;
+            this.btnLaunchAll.Name = "btnLaunch";
+            size = new Size(0x40, 30);
+            this.btnLaunchAll.Size = size;
+            this.btnLaunchAll.TabIndex = 4;
+            this.btnLaunchAll.Text = "Login All";
+            this.ToolTip1.SetToolTip(this.btnLaunchAll, "Start AC on all accounts and Save Current Changes");
+            this.btnLaunchAll.UseVisualStyleBackColor = true;
             this.chkStartDecal.AutoSize = true;
             point = new Point(15, 0x42);
             this.chkStartDecal.Location = point;
@@ -669,6 +742,7 @@
             this.Controls.Add(this.lblSetup);
             this.Controls.Add(this.chkStartDecal);
             this.Controls.Add(this.btnLaunch);
+            this.Controls.Add(this.btnLaunchAll);
             this.Controls.Add(this.cboUsername);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.Label1);
@@ -683,7 +757,7 @@
             this.PerformLayout();
         }
 
-        private string initlaunch(string preferredpath, string username)
+        private string initlaunch(string preferredpath, string username, bool autoCancel = false)
         {
             string str2;
             List<string> list = new List<string>();
@@ -695,16 +769,21 @@
                 {
                     if (string.Equals(this.GetString("LAUNCHER", "DefaultUsername", string.Empty, str2), username, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        DialogResult result = new dlgIgnoreActivate().ShowDialog();
-                        if (result != DialogResult.Ignore)
+                      if (autoCancel)
+                      {
+                        return string.Empty;
+                      }
+
+                      DialogResult result = new dlgIgnoreActivate().ShowDialog();
+                      if (result != DialogResult.Ignore)
+                      {
+                        if ((result == DialogResult.OK) && !process.MainWindowHandle.Equals(IntPtr.Zero))
                         {
-                            if ((result == DialogResult.OK) && !process.MainWindowHandle.Equals(IntPtr.Zero))
-                            {
-                                ShowWindow(process.MainWindowHandle, 1);
-                                BringWindowToTop(process.MainWindowHandle);
-                            }
-                            return string.Empty;
+                          ShowWindow(process.MainWindowHandle, 1);
+                          BringWindowToTop(process.MainWindowHandle);
                         }
+                        return string.Empty;
+                      }
                     }
                 }
                 catch (Exception exception1)
@@ -794,7 +873,7 @@
             return path;
         }
 
-        public int launchac(string username, string di, string da, string world)
+        public int launchac(string username, string di, string da, string world, bool autoCancel = false)
         {
             if (username != string.Empty)
             {
@@ -816,7 +895,7 @@
                     string str3 = string.Empty;
                     try
                     {
-                        if (this.txtAc.isModified())
+                        if (this.txtAc.Text != string.Empty)
                         {
                             if (this.txtAc.Text.Length < 4)
                             {
@@ -824,21 +903,12 @@
                             }
                             else
                             {
-                                byte[] entrophy = null;
-                                item.secret = this.txtAc.getData(ref entrophy);
+                              save_credentials(ref item);
                             }
                         }
                         if (item.secret != null)
                         {
-                            byte[] bytes = ProtectedData.Unprotect(item.secret, null, DataProtectionScope.CurrentUser);
-                            if (bytes != null)
-                            {
-                                str3 = Encoding.UTF8.GetString(bytes);
-                            }
-                            else
-                            {
-                                item.secret = null;
-                            }
+                          str3 = item.secret;
                         }
                     }
                     catch (SecurityException exception1)
@@ -847,7 +917,6 @@
                         SecurityException exception = exception1;
                         Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "Security Exception");
                         item.secret = null;
-                        this.txtAc.ClearText(false);
                         ProjectData.ClearProjectError();
                         return 0;
                     }
@@ -856,11 +925,10 @@
                         ProjectData.SetProjectError(exception4);
                         Exception exception2 = exception4;
                         item.secret = null;
-                        this.txtAc.ClearText(false);
                         ProjectData.ClearProjectError();
                         return 0;
                     }
-                    string path = this.initlaunch(null, item.name);
+                    string path = this.initlaunch(null, item.name, autoCancel);
                     if (File.Exists(path))
                     {
                         string str = "";
@@ -906,6 +974,11 @@
             return 0;
         }
 
+        private void save_credentials(ref UserEntry entry)
+        {
+          entry.secret = txtAc.Text;
+        }
+
         private void lblDelete_Click(object sender, EventArgs e)
         {
             if (this.msettings.accounts != null)
@@ -914,7 +987,6 @@
                 if (entry != null)
                 {
                     this.cboUsername.Text = string.Empty;
-                    this.txtAc.ClearText(false);
                     this.cboUsername.Items.Remove(entry);
                     this.msettings.accounts.Remove(entry);
                 }
@@ -1038,15 +1110,7 @@
                 {
                     if (useraccount.secret != null)
                     {
-                        byte[] bytes = ProtectedData.Unprotect(useraccount.secret, null, DataProtectionScope.CurrentUser);
-                        if (bytes != null)
-                        {
-                            str2 = Encoding.UTF8.GetString(bytes);
-                        }
-                        else
-                        {
-                            useraccount.secret = null;
-                        }
+                      str2 = useraccount.secret;
                     }
                 }
                 catch (SecurityException exception1)
@@ -1055,7 +1119,6 @@
                     SecurityException exception = exception1;
                     Interaction.MsgBox(exception.Message, MsgBoxStyle.Critical, "Security Exception");
                     useraccount.secret = null;
-                    this.txtAc.ClearText(false);
                     ProjectData.ClearProjectError();
                     return;
                 }
@@ -1064,7 +1127,6 @@
                     ProjectData.SetProjectError(exception4);
                     Exception exception2 = exception4;
                     useraccount.secret = null;
-                    this.txtAc.ClearText(false);
                     ProjectData.ClearProjectError();
                     return;
                 }
@@ -1107,6 +1169,7 @@
         private void restartACAndLogin(object sender, EventArgs e)
         {
             this.btnLaunch.Enabled = false;
+            this.btnLaunchAll.Enabled = false;
             try
             {
                 this.mLoginTimer.Tick -= new EventHandler(this.restartACAndLogin);
@@ -1116,7 +1179,8 @@
             }
             finally
             {
-                this.btnLaunch.Enabled = true;
+              this.btnLaunch.Enabled = true;
+              this.btnLaunchAll.Enabled = true;
             }
         }
 
@@ -1299,6 +1363,29 @@
                     this._btnLaunch.Click += handler;
                 }
             }
+        }
+
+        internal virtual Button btnLaunchAll
+        {
+          [DebuggerNonUserCode]
+          get
+          {
+            return this._btnLaunchAll;
+          }
+          [MethodImpl(MethodImplOptions.Synchronized), DebuggerNonUserCode]
+          set
+          {
+            EventHandler handler = new EventHandler(this.btnLaunchAll_Click);
+            if (this._btnLaunchAll != null)
+            {
+              this._btnLaunchAll.Click -= handler;
+            }
+            this._btnLaunchAll = value;
+            if (this._btnLaunchAll != null)
+            {
+              this._btnLaunchAll.Click += handler;
+            }
+          }
         }
 
         internal virtual ComboBox cboUsername
@@ -1489,7 +1576,7 @@
             }
         }
 
-        internal virtual SecureTextbox txtAc
+        internal virtual TextBox txtAc
         {
             [DebuggerNonUserCode]
             get
@@ -1499,16 +1586,16 @@
             [MethodImpl(MethodImplOptions.Synchronized), DebuggerNonUserCode]
             set
             {
-                KeyPressEventHandler handler = new KeyPressEventHandler(this.txtPassword_KeyPress);
-                if (this._txtAc != null)
-                {
-                    this._txtAc.KeyPress -= handler;
-                }
-                this._txtAc = value;
-                if (this._txtAc != null)
-                {
-                    this._txtAc.KeyPress += handler;
-                }
+              KeyEventHandler handler = new KeyEventHandler(this.txtAc_KeyDown);
+              if (this._txtAc != null)
+              {
+                this._txtAc.KeyDown -= handler;
+              }
+              this._txtAc = value;
+              if (this._txtAc != null)
+              {
+                this._txtAc.KeyDown += handler;
+              }
             }
         }
     }

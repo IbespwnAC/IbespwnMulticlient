@@ -62,9 +62,6 @@
     <Compile Include="ACMulticlient\PortRepeater.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ACMulticlient\SecureTextbox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ACMulticlient\AcInstance.cs" />
     <Compile Include="ACMulticlient\UserEntry.cs" />
     <Compile Include="ACMulticlient\Settings.cs" />

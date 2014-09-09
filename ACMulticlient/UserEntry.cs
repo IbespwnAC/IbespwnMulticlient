@@ -6,8 +6,7 @@
     public class UserEntry
     {
         public string name;
-        [XmlIgnore]
-        public byte[] secret;
+        public string secret;
         [XmlIgnore]
         public string usedACpath;
         [XmlIgnore]
