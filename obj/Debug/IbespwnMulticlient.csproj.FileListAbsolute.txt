@@ -1,0 +1,7 @@
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\ACMulticlient.dlgIgnoreActivate.resources
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\ACMulticlient.frmMain.resources
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\ACMulticlient.frmProgress.resources
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\ACMulticlient.frmSetup.resources
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\ACMulticlient.PortRepeater.resources
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\ACMulticlient.Resources.resources
+C:\dev\IbespwnMulticlient\ACMulticlient\obj\Debug\IbespwnMulticlient.csproj.GenerateResource.Cache
