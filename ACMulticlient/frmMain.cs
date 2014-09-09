@@ -124,12 +124,13 @@
 
         private void btnLaunchAll_Click(object sender, EventArgs e)
         {
+          Process[] processesByName;
           this.btnLaunch.Enabled = false;
           this.btnLaunchAll.Enabled = false;
 
           try
           {
-            Process[] processesByName = Process.GetProcessesByName("aclauncher");
+            processesByName = Process.GetProcessesByName("aclauncher");
             if ((processesByName != null) && (processesByName.Count<Process>() > 0))
             {
               Interaction.MsgBox("The aclauncer is active, close this window first.", MsgBoxStyle.Critical, null);
@@ -148,6 +149,24 @@
                 for (int i = 0; i < this.cboUsername.Items.Count; ++i)
                 {
                   this.launchac(((UserEntry) this.cboUsername.Items[i]).name, "0", "0", world, true);
+
+                  // TODO  Gracefully exit if aclauncher is hanging or otherwise still running 
+                  //       after some period of time.
+                  while (true)
+                  {
+                    // Slow it down so it doesn't eat up too many cycles.  
+                    //  Check every 10 ms.
+                    System.Threading.Thread.Sleep(10);
+
+                    // Check to see if aclauncher is still running from the last launch.
+                    processesByName = Process.GetProcessesByName("aclauncher");
+
+                    if ((processesByName == null) || (processesByName.Count<Process>() <= 0))
+                    {
+                      // Break out of while loop.
+                      break;
+                    }
+                  }
                 }
               }
             }
@@ -875,6 +894,9 @@
 
         public int launchac(string username, string di, string da, string world, bool autoCancel = false)
         {
+          string str = "";
+          string str3 = "";
+          string path = "";
             if (username != string.Empty)
             {
                 try
@@ -892,20 +914,9 @@
                         this.cboUsername.Items.Add(username);
                         this.msettings.accounts.Add(item);
                     }
-                    string str3 = string.Empty;
+                    str3 = string.Empty;
                     try
                     {
-                        if (this.txtAc.Text != string.Empty)
-                        {
-                            if (this.txtAc.Text.Length < 4)
-                            {
-                                item.secret = null;
-                            }
-                            else
-                            {
-                              save_credentials(ref item);
-                            }
-                        }
                         if (item.secret != null)
                         {
                           str3 = item.secret;
@@ -928,10 +939,10 @@
                         ProjectData.ClearProjectError();
                         return 0;
                     }
-                    string path = this.initlaunch(null, item.name, autoCancel);
+                    path = this.initlaunch(null, item.name, autoCancel);
                     if (File.Exists(path))
                     {
-                        string str = "";
+                        str = "";
                         bool flag = false;
                         item.usedACpath = Path.GetDirectoryName(path);
                         item.usedworld = world;
@@ -955,6 +966,10 @@
                         }
                         while (!(process.HasExited | flag));
 
+#if DEBUG
+                        Console.WriteLine("Launched (" + path + "): " + str);
+#endif
+
                         return 1;
                     }
                     else if (!string.IsNullOrEmpty(path))
@@ -970,6 +985,10 @@
                     ProjectData.ClearProjectError();
                 }
             }
+
+#if DEBUG
+            Console.WriteLine("Elected not to duplicate Path=" + path + " Account=" + str);
+#endif
 
             return 0;
         }
